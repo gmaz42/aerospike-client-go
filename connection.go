@@ -71,6 +71,9 @@ type Connection struct {
 
 // makes sure that the connection is closed eventually, even if it is not consumed
 func connectionFinalizer(c *Connection) {
+	if c.node != nil {
+		go logger.Logger.Debug("Node " + c.node.String() + ": closing garbage-collected connection")
+	}
 	c.Close()
 }
 
