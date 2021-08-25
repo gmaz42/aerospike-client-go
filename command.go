@@ -2200,9 +2200,11 @@ func (cmd *baseCommand) executeAt(ifc command, policy *BasePolicy, isRead bool, 
 			// close the connection to throw away its data and signal the server about the
 			// situation. We will not put back the connection in the buffer.
 			if cmd.conn.IsConnected() && types.KeepConnection(err) {
+				logger.Logger.Info("Node " + cmd.node.String() + ": putting connection back in pool")
 				// Put connection back in pool.
 				cmd.node.PutConnection(cmd.conn)
 			} else {
+				logger.Logger.Info("Node " + cmd.node.String() + ": closing connection because of error: " + fmt.Sprintf("%v", err))
 				cmd.conn.Close()
 				cmd.conn = nil
 			}
